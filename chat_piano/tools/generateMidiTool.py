@@ -1,22 +1,29 @@
-# %%
 import time
 import requests
-from midi2audio import FluidSynth
-from IPython.display import Audio, display
+# from midi2audio import FluidSynth
+# from IPython.display import Audio, display
+
+IS_DUMMY = False
+
+DUMMY_MSG = 'This is a dummy response from a placeholder server '
+'because developer Haobo is temporarily unavailable.'
 
 class TextToMidiClient:
-    def __init__(self, base_url):
-        self.base_url = base_url.rstrip('/')
+    def __init__(self, base_url: str):
+        if IS_DUMMY:
+            self.base_url = 'DUMMY URL'
+        else:
+            self.base_url = base_url.rstrip('/')
 
-        # test availtability
-        # FIXME: make Musecoco server support shakehand
-        try:
-            self.check_status('dummy_id')
-        except requests.HTTPError:
-            print('Backend is online')
-        except:
-            print('Backend is offline')
-            raise
+            # test availability
+            # FIXME: make Musecoco server support shakehand
+            try:
+                self.check_status('dummy_id')
+            except requests.HTTPError:
+                print('Backend is online')
+            except:
+                print('Backend is offline')
+                raise
 
     def submit_text(self, text):
         url = f"{self.base_url}/submit-text"
@@ -57,7 +64,6 @@ text2midi_client = TextToMidiClient(
 )
 
 
-# %%
 # Define an assistant tool to handle music conversion
 def convert_text_to_midi(text_command):
     try:
@@ -96,7 +102,6 @@ def convert_text_to_midi(text_command):
         print(f"An error occurred: {err}")
         return None, None
 
-# %%
 import threading
 import queue
 import time
@@ -110,6 +115,11 @@ def handle_midi_conversion(text_command, result_queue):
 result_queue = queue.Queue()
 thread_list = []
 def generate_midi(text_command):
+    if IS_DUMMY:
+        return {
+            "ok": False,
+            "instructions": DUMMY_MSG,
+        }
     conversion_thread = threading.Thread(target=handle_midi_conversion,
                                          args=(text_command, result_queue))
     conversion_thread.start()
@@ -120,6 +130,11 @@ def generate_midi(text_command):
     }
 
 def check_generate_midi_status():
+    if IS_DUMMY:
+        return {
+            "status": "dummy",
+            "message": DUMMY_MSG,
+        }
     # Check if there's a MIDI conversion in progress
     if thread_list:
         latest_thread = thread_list[0]
