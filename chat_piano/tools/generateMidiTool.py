@@ -58,7 +58,8 @@ class TextToMidiClient:
     
 # Initialize the client with the base URL of your Flask server
 text2midi_client = TextToMidiClient(
-    base_url="http://text2midi.api.aierlab.tech", 
+    base_url="http://api.crosswings.top:8001", 
+    # base_url="http://text2midi.api.aierlab.tech", 
     # base_url="http://localhost:5000", 
     # base_url="http://localhost:2333", 
 )
