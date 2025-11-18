@@ -3,7 +3,7 @@ import requests
 # from midi2audio import FluidSynth
 # from IPython.display import Audio, display
 
-IS_DUMMY = False
+IS_DUMMY = True
 
 DUMMY_MSG = 'This is a dummy response from a placeholder server '
 'because developer Haobo is temporarily unavailable.'
@@ -58,6 +58,7 @@ class TextToMidiClient:
     
 # Initialize the client with the base URL of your Flask server
 text2midi_client = TextToMidiClient(
+    # base_url="http://92.96.141.34:8001", 
     base_url="http://api.crosswings.top:8001", 
     # base_url="http://text2midi.api.aierlab.tech", 
     # base_url="http://localhost:5000", 
